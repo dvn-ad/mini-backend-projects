@@ -103,7 +103,6 @@ func Run() {
 				}
 			}
 
-		
 		case "mark-in-progress":
 			idStr :=cmdArgs[0]
 			id, err:=strconv.Atoi(idStr)
@@ -111,7 +110,7 @@ func Run() {
 				fmt.Println("Invalid id")
 				return
 			}
-			task.UpdateTask(id, "in-progress")
+			task.UpdateStatus(id, "in-progress")
 
 		case "mark-done":
 			idStr :=cmdArgs[0]
@@ -120,7 +119,30 @@ func Run() {
 				fmt.Println("Invalid id")
 				return
 			}
-			task.UpdateTask(id, "done")
+			task.UpdateStatus(id, "done")
+
+		case "update":
+			idStr :=cmdArgs[0]
+			id, err:=strconv.Atoi(idStr)
+			if err!=nil{
+				fmt.Println("Invalid id")
+				return
+			}
+			// fmt.Println(id, cmdArgs[1])
+			error := task.UpdateDesc(id, cmdArgs[1])
+			if error !=nil{
+				fmt.Println("Error: Couldn't find the task")
+				return
+			}
+
+		case "delete":
+			idStr :=cmdArgs[0]
+			id, err:=strconv.Atoi(idStr)
+			if err!=nil{
+				fmt.Println("Invalid id")
+				return
+			}
+			task.DeleteTask(id)
 
 		default:
 			fmt.Println("Unknown command:", command)

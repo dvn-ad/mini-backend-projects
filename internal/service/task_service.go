@@ -55,7 +55,7 @@ func ListTasks(status string) ([]task.Task, error){
 	return nil, err
 }
 
-func UpdateTask(id int, status string) error {
+func UpdateStatus(id int, status string) error {
 	tasks, err :=storage.LoadTasks()
 	if err!=nil{
 		return err
@@ -65,6 +65,47 @@ func UpdateTask(id int, status string) error {
 		if t.ID == id{
 			tasks[i].Status = status
 			tasks[i].UpdatedAt = time.Now()
+			found=true
+			break
+		}
+	}
+	if !found{
+		return fmt.Errorf("task not found")
+	}
+	
+	return storage.SaveTasks(tasks)
+}
+
+
+func UpdateDesc(id int, status string) error {
+	tasks, err :=storage.LoadTasks()
+	if err!=nil{
+		return err
+	}
+	found:=false
+	for i,t:=range tasks{
+		if t.ID == id{
+			tasks[i].Description = status
+			tasks[i].UpdatedAt = time.Now()
+			found=true
+			break
+		}
+	}
+	if !found{
+		return fmt.Errorf("task not found")
+	}
+	return storage.SaveTasks(tasks)
+}
+
+func DeleteTask(id int) error {
+	tasks ,err:=storage.LoadTasks()
+	if err!=nil{
+		return err
+	}
+	found:=false
+	for i,t:=range tasks{
+		if t.ID == id{
+			tasks = append(tasks[:i], tasks[i+1:]...)
 			found=true
 			break
 		}
