@@ -1,8 +1,9 @@
-package task
+package expense
 
 import (
 	"fmt"
-	"task-cli/internal/storage"
-	"task-cli/internal/task"
+	"expense-tracker/internal/storage"
+	"expense-tracker/internal/expense"
 	"time"
 )
+
