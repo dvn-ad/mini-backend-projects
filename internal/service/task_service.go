@@ -14,8 +14,16 @@ func AddTask(description string) error {
 			fmt.Println("Error loading tasks:", err)
 			return err
 		}
+
+		maxID := 0
+		for _, t := range tasks {
+			if t.ID > maxID {
+				maxID = t.ID
+			}
+		}
+
 		newTask:=task.Task{
-			ID: len(tasks)+1,
+			ID: maxID + 1,
 			Description: description,
 			Status: "todo",
 			CreatedAt: time.Now(),
