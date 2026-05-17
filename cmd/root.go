@@ -37,6 +37,7 @@ func Run() {
 				fmt.Println("Error: failed to load tasks")
 				return
 			}
+			fmt.Println("Tasks:")		
 			for _, t := range tasks{
 				fmt.Printf(
 					"[%d] %s | %s | created: %s | updated: %s\n",
@@ -48,7 +49,6 @@ func Run() {
 				)
 			}
 		}
-		fmt.Println("Tasks:")		
 
 	default:
 		fmt.Println("Unknown command:", command)
