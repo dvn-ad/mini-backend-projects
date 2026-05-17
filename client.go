@@ -26,9 +26,23 @@ func FetchGithubActivity(username string)([]Event, error){
 	
 	if resp.StatusCode == http.StatusNotFound {
 		return nil, fmt.Errorf("user '%s' not found", username)
-	} else if resp.StatusCode != http.StatusOK {
+	}else if resp.StatusCode != http.StatusOK {
+		type GitHubError struct {
+			Message          string `json:"message"`
+			DocumentationURL string `json:"documentation_url"`
+		}
+		
+		var gitHubErr GitHubError
+		// Try to decode the error message from GitHub
+		if err := json.NewDecoder(resp.Body).Decode(&gitHubErr); err == nil && gitHubErr.Message != "" {
+			return nil, fmt.Errorf("GitHub API Error (%s): %s", resp.Status, gitHubErr.Message)
+		}
+		
 		return nil, fmt.Errorf("GitHub API returned status: %s", resp.Status)
 	}
+	//  else if resp.StatusCode != http.StatusOK {
+	// 	return nil, fmt.Errorf("GitHub API returned status: %s", resp.Status)
+	// }
 
 	var events []Event
 	if err:=json.NewDecoder(resp.Body).Decode(&events); err!=nil{
