@@ -8,7 +8,7 @@ import (
 
 const filepath = "data/tasks.json"
 
-func LoadTasks([]task.Task, error) {
+func LoadTasks()([]task.Task, error) {
 	if _, err := os.Stat(filepath); os.IsNotExist(err) {
 		return []task.Task{}, nil
 	}
@@ -29,7 +29,7 @@ func LoadTasks([]task.Task, error) {
 }
 func SaveTasks(tasks []task.Task) error {
 	data, err := json.MarshalIndent(tasks, "", " ")
-	if err != nli {
+	if err != nil {
 		return err
 	}
 	err = os.WriteFile(filepath,data,0644)
