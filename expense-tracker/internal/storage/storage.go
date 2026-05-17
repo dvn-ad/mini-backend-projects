@@ -29,7 +29,7 @@ func LoadExpenses()([]expense.Expense, error){
 	return expenses, nil
 }
 
-func SaveTasks(tasks []expense.Expense) error {
+func SaveExpenses(tasks []expense.Expense) error {
 	data, err := json.MarshalIndent(tasks, "", " ")
 	if err != nil {
 		return err
