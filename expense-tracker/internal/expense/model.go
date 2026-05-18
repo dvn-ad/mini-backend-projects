@@ -8,3 +8,8 @@ type Expense struct {
 	Description string 	`json:"description"`
 	Amount int		`json:"amount"`
 }
+
+type Summary struct{
+	Expenses int 	`json:"expenses"`
+	UpdatedAt time.Time `json:"UpdatedAt`
+}

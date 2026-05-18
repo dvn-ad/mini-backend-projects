@@ -7,6 +7,27 @@ import (
 	"time"
 )
 
+func countExpenses()(error){
+	expenses,err:=storage.LoadExpenses()
+	if err!=nil{
+		return fmt.Errorf("failed to load data %w", err)
+	}
+	val:=0
+	for _,e:=range expenses{
+		val+=e.Amount
+	}
+	
+	newSummmary:=expense.Summary{
+		Expenses: val,
+		UpdatedAt: time.Now(),
+	}
+	err=storage.UpdateSummmary(newSummmary)
+	if err!=nil{
+		return fmt.Errorf("failed to update summary, %w",err)
+	}
+	return nil
+}
+
 func AddExpense(desc string, amount int)error{
 	expenses,err:=storage.LoadExpenses()
 	if err!=nil{
@@ -29,6 +50,10 @@ func AddExpense(desc string, amount int)error{
 	if err!=nil{
 		return fmt.Errorf("failed to save %w", err)
 	}
+	err=countExpenses()
+	if err!=nil{
+		return err
+	}
 	fmt.Printf("Expense added successfully (ID: %d)\n",maxID+1)
 	return nil
 }
@@ -39,4 +64,12 @@ func ListExpenses()([]expense.Expense,error){
 		return nil,fmt.Errorf("failed to load data %w", err)
 	}
 	return expenses,nil
+}
+
+func ShowSummary()(expense.Summary,error){
+	summaries,err:=storage.LoadSummary()
+	if err!=nil{
+		return expense.Summary{},fmt.Errorf("failed to load data %w", err)
+	}
+	return summaries,nil
 }

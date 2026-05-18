@@ -24,9 +24,10 @@ func Run() {
 		var desc string
 		var amount int
 		for i:=range 4{
-			if cmdArgs[i] == "--description"{
+			switch cmdArgs[i] {
+			case "--description":
 				desc=cmdArgs[i+1]
-			}else if cmdArgs[i] == "--amount"{
+			case "--amount":
 				val,err:=strconv.Atoi(cmdArgs[i+1])
 				if err!=nil{
 					fmt.Printf("invalid amount")
@@ -34,12 +35,12 @@ func Run() {
 				}
 				amount=val
 			}
-
 		}
 		err:=service.AddExpense(desc, amount)
 		if err!=nil{
 			fmt.Printf("failed to laod data")
 		}
+
 	case "list":
 		expenses,err:=storage.LoadExpenses()
 		if err!=nil{
@@ -53,9 +54,14 @@ func Run() {
 				e.ID,e.Date.Format("2006-01-02 15:04"),e.Description,e.Amount,
 			)
 		}
-	// case condition:
-		
-	// case condition:
+	case "summary":
+		summary,err:=service.ShowSummary()
+		if err!=nil{
+			fmt.Printf("couldn't load summary")
+			return 
+		}
+		fmt.Printf("Total expenses: $%d\n", summary.Expenses)
+	case "delete":
 		
 	}
 }
