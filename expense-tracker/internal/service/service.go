@@ -59,6 +59,9 @@ func AddExpense(desc string, amount int)error{
 	}
 	summaries.Total+=amount
 	targetMonth := time.Now().Format("2006-01")
+	if summaries.Monthly == nil{
+		summaries.Monthly=make(map[string]expense.MonthlySummary)
+	}
 	if monthly, exists := summaries.Monthly[targetMonth]; exists {
 		monthly.Total += amount 
 		monthly.Count += 1

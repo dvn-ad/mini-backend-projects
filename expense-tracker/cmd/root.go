@@ -75,12 +75,13 @@ func Run() {
 				fmt.Println("invalid month (1-12)")
 				return
 			}
-			monthKey := fmt.Sprintf("2026-%02d", monthInt)
-			summary, err := service.GetMonthlySummmary(monthKey)
+			summaries,err:=storage.LoadSummary()
 			if err != nil {
-				fmt.Printf("Error: %v\n", err)
-				return
+				fmt.Printf("failed to load summary (%w)",err)
+				return 
 			}
+			monthKey := fmt.Sprintf("2026-%02d", monthInt)
+			amount:=summaries.Monthly[monthKey].Total
 			months := []string{
 				"", "January", "February", "March", "April",
 				"May", "June", "July", "August", "September",
@@ -89,7 +90,7 @@ func Run() {
 			fmt.Printf(
 				"Total expenses for %s: $%d\n",
 				months[monthInt],
-				summary.Total,
+				amount,
 			)
 			return
 		}
