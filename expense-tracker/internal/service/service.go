@@ -108,5 +108,39 @@ func DeleteExpense(id int)error{
 	if err!=nil{
 		return err
 	}
+	var targetMonth string
+	var targetAmount int
+	found:=false
+	for i,j:=range expenses{
+		if j.ID == id{
+			expenses=append(expenses[:i],expenses[i+1:]...)
+			targetMonth=j.Date.Format("2006-01")
+			targetAmount=j.Amount
+			found=true
+		}
+	}
+	if !found{
+		return fmt.Errorf("expense with id %d not found",id)
+	}
+	err=storage.SaveExpenses(expenses)
+	if err!=nil{
+		return fmt.Errorf("failed to save expenses (%w)",err)
+	}
+
+	// handle Summary
+	summaries,err:=storage.LoadSummary()
+	if err!=nil{
+		return fmt.Errorf("failed to load summary (%w)",err)
+	}
+	summaries.Total-=targetAmount
+	if monthly, exists :=summaries.Monthly[targetMonth]; exists {
+        monthly.Total -= targetAmount
+        monthly.Count -= 1
+        summaries.Monthly[targetMonth] = monthly //
+    }
+    err = storage.UpdateSummary(summaries)
+	if err!=nil{
+		return fmt.Errorf("failed to save summary (%w)",err)
+	}
 	return nil
 }
