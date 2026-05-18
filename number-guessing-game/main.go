@@ -14,8 +14,32 @@ func main(){
 		fmt.Println("error: %w",err)
 		return
 	}
-	err:=service.Game(choice)
-	if err!=nil{
-		fmt.Printf("%v\n",err)
+
+	for{
+		if err:=service.Game(choice); err!=nil{
+			fmt.Printf("%v\n",err)
+		}
+		
+		var playAgain string
+		fmt.Printf("\nDo you wanna play again? [y/n] : ")
+		if _,err:=fmt.Scanln(&playAgain); err!=nil{
+			fmt.Printf("%v\n",err)
+		}
+		
+		switch playAgain {
+		case "y":
+			continue
+		case "Y":
+			continue
+		case "n":
+			fmt.Println("Thank you for playing!")
+			return
+		case "N":
+			fmt.Println("Thank you for playing!")
+			return
+		default:
+			fmt.Println("invalid option, aborted the game")
+			return
+		}
 	}
 }
