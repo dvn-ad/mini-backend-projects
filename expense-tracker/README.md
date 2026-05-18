@@ -19,8 +19,8 @@ Ensure you have [Go](https://go.dev/doc/install) installed on your system (versi
 
 1. Clone the repository:
    ```bash
-   git clone <your-repository-url> # Replace with your actual repository URL
-   cd expense-tracker
+   git clone https://github.com/dvn-ad/mini-backend-projects.git
+   cd mini-backend-projects/expense-tracker
    ```
 
 2. Build the application:

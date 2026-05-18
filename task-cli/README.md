@@ -17,8 +17,8 @@ Ensure you have [Go](https://go.dev/doc/install) installed on your system.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/dvn-ad/task-tracker-cli.git
-   cd task-tracker-cli
+   git clone https://github.com/dvn-ad/mini-backend-projects.git
+   cd mini-backend-projects/task-cli
    ```
 
 2. Build the application:
