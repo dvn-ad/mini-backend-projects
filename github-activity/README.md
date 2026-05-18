@@ -22,8 +22,8 @@ This project is a solution to the [GitHub User Activity](https://roadmap.sh/proj
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/dvn-ad/GitHub-User-Activity.git
-   cd GitHub-User-Activity
+   git clone https://github.com/dvn-ad/mini-backend-projects.git
+   cd mini-backend-projects/GitHub-User-Activity
    ```
 
 2. Build the application:
