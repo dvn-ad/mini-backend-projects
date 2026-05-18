@@ -96,6 +96,26 @@ func Run() {
 		}
 
 	case "delete":
-		
+		if cmdArgs[0]=="--id"{
+			intId,err:=strconv.Atoi(cmdArgs[1])
+			if err!=nil{
+				fmt.Printf("invalid id %s\n",cmdArgs[1])
+				fmt.Printf("usage: delete --id <id>\new(type)")
+				return
+			}
+			err=service.DeleteExpense(intId)
+			if err!=nil{
+				fmt.Printf("failed to delete (%v)\n",err)
+				return
+			}
+			fmt.Println("Expense deleted successfully")
+		}else{
+			fmt.Println("usage: delete --id <id>")
+			return
+		}
+		return
+	
+	default:
+		fmt.Println("invalid command")
 	}
 }
