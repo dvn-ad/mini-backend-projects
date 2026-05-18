@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// func countExpenses()(error){
+// func countSummary()(error){
 // 	expenses,err:=storage.LoadExpenses()
 // 	if err!=nil{
 // 		return fmt.Errorf("failed to load data %w", err)
@@ -28,32 +28,6 @@ import (
 // 	return nil
 // }
 
-func countExpenses() error {
-    expenses, err := storage.LoadExpenses()
-    if err != nil {
-        return fmt.Errorf("failed to load data: %w", err)
-    }
-    total := 0
-    // monthly := make(map[string]int)
-	monthly := make(map[string]expense.MonthlySummary)
-    for _, e := range expenses {
-        total += e.Amount
-		monthKey := e.Date.Format("2006-01")
-		m := monthly[monthKey]
-		m.Total += e.Amount
-		m.Count += 1
-		monthly[monthKey] = m
-    }
-    newSummary := expense.Summary{
-        Total:     total,
-        Monthly:   monthly,
-        UpdatedAt: time.Now(),
-    }
-    if err := storage.UpdateSummary(newSummary); err != nil {
-        return fmt.Errorf("failed to update summary: %w", err)
-    }
-    return nil
-}
 
 func AddExpense(desc string, amount int)error{
 	expenses,err:=storage.LoadExpenses()
@@ -77,9 +51,27 @@ func AddExpense(desc string, amount int)error{
 	if err!=nil{
 		return fmt.Errorf("failed to save %w", err)
 	}
-	err=countExpenses()
+
+	// Count the total summaries and monthly summary without counting each data in data.json
+	summaries,err:=storage.LoadSummary()
 	if err!=nil{
-		return err
+		return fmt.Errorf("failed to open summary(%w)",err)
+	}
+	summaries.Total+=amount
+	targetMonth := time.Now().Format("2006-01")
+	if monthly, exists := summaries.Monthly[targetMonth]; exists {
+		monthly.Total += amount 
+		monthly.Count += 1
+		summaries.Monthly[targetMonth] = monthly
+	} else {
+		summaries.Monthly[targetMonth] = expense.MonthlySummary{
+			Total: amount,
+			Count: 1,
+		}
+	}
+	err=storage.UpdateSummary(summaries)
+	if err!=nil{
+		return fmt.Errorf("failed to update summary (%w)",err)
 	}
 	fmt.Printf("Expense added successfully (ID: %d)\n",maxID+1)
 	return nil
@@ -101,7 +93,7 @@ func GetSummary()(expense.Summary,error){
 	return summaries,nil
 }
 
-func GetMonthlySummmary(month string)(expense.MonthlySummary,error){
+func GetMonthlySummary(month string)(expense.MonthlySummary,error){
 	summaries,err:=storage.LoadSummary()
 	if err!=nil{
 		fmt.Printf("invalid month")
@@ -109,4 +101,12 @@ func GetMonthlySummmary(month string)(expense.MonthlySummary,error){
 	}
 	total:=summaries.Monthly[month]
 	return total,nil
+}
+
+func DeleteExpense(id int)error{
+	expenses,err:=storage.LoadExpenses()
+	if err!=nil{
+		return err
+	}
+	return nil
 }
