@@ -43,7 +43,7 @@ func SaveExpenses(expenses []expense.Expense) error {
 
 
 const summaryPath = "data/summary.json"
-func UpdateSummmary(summaries expense.Summary) error {
+func UpdateSummary(summaries expense.Summary) error {
 	summary, err := json.MarshalIndent(summaries, "", " ")
 	if err != nil {
 		return err

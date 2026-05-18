@@ -55,12 +55,45 @@ func Run() {
 			)
 		}
 	case "summary":
-		summary,err:=service.ShowSummary()
-		if err!=nil{
-			fmt.Printf("couldn't load summary")
-			return 
+		if len(cmdArgs) == 0 {
+			summary, err := service.GetSummary()
+			if err != nil {
+				fmt.Printf("couldn't load summary: %v\n", err)
+				return
+			}
+			fmt.Printf("Total expenses: $%d\n", summary.Total)
+			return
 		}
-		fmt.Printf("Total expenses: $%d\n", summary.Expenses)
+
+		if cmdArgs[0] == "--month" {
+			if len(cmdArgs) < 2 {
+				fmt.Println("usage: summary --month <1-12>")
+				return
+			}
+			monthInt, err := strconv.Atoi(cmdArgs[1])
+			if err != nil || monthInt < 1 || monthInt > 12 {
+				fmt.Println("invalid month (1-12)")
+				return
+			}
+			monthKey := fmt.Sprintf("2026-%02d", monthInt)
+			summary, err := service.GetMonthlySummmary(monthKey)
+			if err != nil {
+				fmt.Printf("Error: %v\n", err)
+				return
+			}
+			months := []string{
+				"", "January", "February", "March", "April",
+				"May", "June", "July", "August", "September",
+				"October", "November", "December",
+			}
+			fmt.Printf(
+				"Total expenses for %s: $%d\n",
+				months[monthInt],
+				summary.Total,
+			)
+			return
+		}
+
 	case "delete":
 		
 	}

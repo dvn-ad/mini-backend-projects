@@ -1,26 +1,14 @@
 [
  {
   "id": 1,
-  "date": "2026-05-18T00:06:00.066648822+07:00",
-  "description": "Lunch",
-  "amount": 20
+  "date": "2026-05-18T08:48:50.754469976+07:00",
+  "description": "Dinner",
+  "amount": 10
  },
  {
   "id": 2,
-  "date": "2026-05-18T00:06:47.946102215+07:00",
-  "description": "Lunch",
-  "amount": 20
- },
- {
-  "id": 3,
-  "date": "2026-05-18T00:17:19.743221141+07:00",
-  "description": "Lunch",
-  "amount": 20
- },
- {
-  "id": 4,
-  "date": "2026-05-18T07:22:05.061224023+07:00",
-  "description": "Lunch",
-  "amount": 20
+  "date": "2026-05-18T08:49:13.764929497+07:00",
+  "description": "Dinner",
+  "amount": 10
  }
 ]
