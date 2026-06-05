@@ -14,6 +14,9 @@ function App() {
   const [input, setInput] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [username, setUsername]=useState("");
+  const [tempUsername, setTempUsername]=useState("")
+  const [isJoined,setIsJoined]=useState(false)
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -22,7 +25,9 @@ function App() {
   }, [messages]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    if(!isJoined||!username)return
+    const socket = new WebSocket(`ws://localhost:8080/ws?username=${encodeURIComponent(username)}`);
+
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
@@ -40,7 +45,7 @@ function App() {
     return () => {
       socket.close();
     };
-  }, []);
+  }, [isJoined,username]);
 
   const sendMessage = () => {
     if (input.trim() !== "" && socketRef.current?.readyState === WebSocket.OPEN) {
@@ -48,7 +53,30 @@ function App() {
       setInput(""); 
     }
   };
+  const handleJoin = () => {
+    if (tempUsername.trim() !== "") {
+      setUsername(tempUsername.trim());
+      setIsJoined(true);
+    }
+  };
 
+  if (!isJoined) {
+    return (
+      <div style={{ padding: '50px 20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
+        <h2>Enter your nickname to join the chat</h2>
+        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+          <input
+            style={{ flex: 1, padding: '10px' }}
+            value={tempUsername}
+            onChange={(e) => setTempUsername(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+            placeholder="Nickname..."
+          />
+          <button onClick={handleJoin} style={{ padding: '10px 20px' }}>Join</button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h2>Real-Time Go Chat</h2>

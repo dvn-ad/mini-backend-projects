@@ -17,6 +17,7 @@ type Client struct {
     hub  *Hub
     conn *websocket.Conn // This comes from the gorilla/websocket library
     send chan []byte     // The personal mailbox
+	username string
 }
 
 func (c *Client) readPump () {
@@ -32,7 +33,7 @@ func (c *Client) readPump () {
 		}
 		msg := Message{
 			Type: "chat",
-			Sender: "dummy",
+			Sender: c.username,
 			Content: string(message),
 			Timestamp: time.Now().Format(time.RFC3339),
 		}

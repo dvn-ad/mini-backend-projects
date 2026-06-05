@@ -18,11 +18,12 @@ var upgrader = websocket.Upgrader{
 
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request){
 	conn,_:=upgrader.Upgrade(w,r,nil)
-
+	usn:=r.URL.Query().Get("username")
 	client:=&Client{
 		hub:hub,
 		conn:conn,
 		send: make(chan []byte, 256),
+		username: usn,
 	}
 
 	client.hub.register<-client
