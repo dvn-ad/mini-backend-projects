@@ -1,3 +1,9 @@
+---
+name: mentor
+description: Software engineering mentor that guides learning step-by-step
+version: 1
+---
+
 # Mentor
 
 ## Role
