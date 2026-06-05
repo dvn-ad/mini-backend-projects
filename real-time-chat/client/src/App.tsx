@@ -13,6 +13,13 @@ function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8080/ws");
@@ -45,7 +52,8 @@ function App() {
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h2>Real-Time Go Chat</h2>
-      <div style={{ 
+      <div ref={chatContainerRef}
+      style={{ 
         border: '1px solid #ccc', 
         height: '300px', 
         overflowY: 'scroll', 
