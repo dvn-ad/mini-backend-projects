@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gorilla/websocket"
+	"encoding/json"
+	"time"
 )
 
 type Message struct{
@@ -28,7 +30,14 @@ func (c *Client) readPump () {
 		if err!=nil{
 			break
 		}
-		c.hub.broadcast<-message
+		msg := Message{
+			Type: "chat",
+			Sender: "dummy",
+			Content: string(message),
+			Timestamp: time.Now().Format(time.RFC3339),
+		}
+		marshalled,_:=json.Marshal(msg)
+		c.hub.broadcast<-marshalled
 	}
 }
 

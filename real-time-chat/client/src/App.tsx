@@ -5,12 +5,12 @@ import './App.css';
 interface ChatMessage {
   type: 'chat' | 'system';
   sender: string;
-  context: string;
+  content: string;
   timestamp: string;
 }
 
 function App() {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
 
@@ -19,8 +19,12 @@ function App() {
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
-      const newMessage = event.data;
-      setMessages((prev) => [...prev, newMessage]);
+      try{
+        const parsedMessage: ChatMessage=JSON.parse(event.data);
+        setMessages((prev)=>[...prev,parsedMessage]);
+      }catch(error){
+        console.error("Error parsing message:", error);
+      }
     };
 
     socket.onopen = () => console.log("Connected to Go Server");
@@ -57,7 +61,11 @@ function App() {
             borderRadius: '4px',
             boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
           }}>
-            {msg}
+            <strong>{msg.sender}: </strong>
+            <span>{msg.content}</span>
+            <div style={{fontSize:'10px',color:'#888',marginTop:'4px'}}>
+              {new Date(msg.timestamp).toLocaleTimeString()}
+            </div>
           </div>
         ))}
       </div>
