@@ -4,6 +4,13 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+type Message struct{
+	Type		string `json:"type"`
+	Sender		string `json:"sender"`
+	Content		string `json:"content"`
+	Timestamp	string `json:"timestamp"`
+}
+
 type Client struct {
     hub  *Hub
     conn *websocket.Conn // This comes from the gorilla/websocket library

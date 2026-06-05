@@ -3,7 +3,9 @@ import './App.css';
 
 // Move interfaces outside the component
 interface ChatMessage {
-  text: string;
+  type: 'chat' | 'system';
+  sender: string;
+  context: string;
   timestamp: string;
 }
 
