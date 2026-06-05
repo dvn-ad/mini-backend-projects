@@ -62,58 +62,65 @@ function App() {
 
   if (!isJoined) {
     return (
-      <div style={{ padding: '50px 20px', maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
-        <h2>Enter your nickname to join the chat</h2>
-        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-          <input
-            style={{ flex: 1, padding: '10px' }}
-            value={tempUsername}
-            onChange={(e) => setTempUsername(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
-            placeholder="Nickname..."
-          />
-          <button onClick={handleJoin} style={{ padding: '10px 20px' }}>Join</button>
+      <div className="chat-app-container">
+        <div className="join-card">
+          <h2 className="join-title">Enter your nickname to join</h2>
+          <div className="join-form">
+            <input
+              className="input-styled"
+              value={tempUsername}
+              onChange={(e) => setTempUsername(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+              placeholder="Nickname..."
+            />
+            <button className="button-styled" onClick={handleJoin}>Join</button>
+          </div>
         </div>
       </div>
     );
   }
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2>Real-Time Go Chat</h2>
-      <div ref={chatContainerRef}
-      style={{ 
-        border: '1px solid #ccc', 
-        height: '300px', 
-        overflowY: 'scroll', 
-        marginBottom: '10px',
-        background: '#f9f9f9',
-        padding: '10px'
-      }}>
-        {messages.map((msg, i) => (
-          <div key={i} style={{ 
-            padding: '8px', 
-            marginBottom: '5px', 
-            background: '#fff', 
-            borderRadius: '4px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-          }}>
-            <strong>{msg.sender}: </strong>
-            <span>{msg.content}</span>
-            <div style={{fontSize:'10px',color:'#888',marginTop:'4px'}}>
-              {new Date(msg.timestamp).toLocaleTimeString()}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <input 
-          style={{ flex: 1, padding: '10px' }}
-          value={input} 
-          onChange={(e) => setInput(e.target.value)} 
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMessage} style={{ padding: '10px 20px' }}>Send</button>
+    <div className="chat-app-container">
+      <div className="chat-box">
+        <div className="chat-header">
+          <h2>Real-Time Go Chat</h2>
+          <span className="user-badge">{username}</span>
+        </div>
+        <div ref={chatContainerRef} className="chat-messages">
+          {messages.map((msg, i) => {
+            const isSystem = msg.type === 'system';
+            const isSelf = msg.sender === username;
+            
+            return (
+              <div 
+                key={i} 
+                className={`message-row ${isSystem ? 'system' : isSelf ? 'self' : 'other'}`}
+              >
+                {!isSystem && !isSelf && (
+                  <span className="message-sender">{msg.sender}</span>
+                )}
+                <div className="message-bubble">
+                  <span>{msg.content}</span>
+                  {!isSystem && (
+                    <div className="message-meta">
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="chat-input-area">
+          <input 
+            className="input-styled"
+            value={input} 
+            onChange={(e) => setInput(e.target.value)} 
+            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+            placeholder="Type a message..."
+          />
+          <button className="button-styled" onClick={sendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );

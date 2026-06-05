@@ -1,6 +1,9 @@
 package main
 
-import(
+import (
+	"encoding/json"
+	"fmt"
+	"time"
 ) 
 
 
@@ -32,10 +35,43 @@ func (h *Hub) Run(){
 		select{
 		case client := <-h.register:
 			h.clients[client]=true
+			msg := Message{
+				Type:      "system",
+				Sender:    "System",
+				Content:   fmt.Sprintf("%s joined the chat", client.username),
+				Timestamp: time.Now().Format(time.RFC3339),
+			}
+			if marshalled, err := json.Marshal(msg); err == nil {
+				for c := range h.clients {
+					select {
+					case c.send <- marshalled:
+					default:
+						close(c.send)
+						delete(h.clients, c)
+					}
+				}
+			}
 		case client:=<-h.unregister:
 			if _,ok:=h.clients[client];ok{
 				delete(h.clients,client)
 				close(client.send)
+				
+				msg := Message{
+					Type:      "system",
+					Sender:    "System",
+					Content:   fmt.Sprintf("%s left the chat", client.username),
+					Timestamp: time.Now().Format(time.RFC3339),
+				}
+				if marshalled, err := json.Marshal(msg); err == nil {
+					for c := range h.clients {
+						select {
+						case c.send <- marshalled:
+						default:
+							close(c.send)
+							delete(h.clients, c)
+						}
+					}
+				}
 			}
 		case message:=<-h.broadcast:
 			for client:=range h.clients{
